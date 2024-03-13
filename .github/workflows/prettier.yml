@@ -21,6 +21,7 @@ jobs:
           replacement=',\n\t\"format\": \"prettier --write .\"'
           combineReplacement="${constToFind}${replacement}"
           sed -i "s/${constToFind}/${combineReplacement}/g" package.json
+          cat package.json
       - name: Run prettier
         run: |
           npm run format
