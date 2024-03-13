@@ -20,7 +20,7 @@ jobs:
           constToFind='\"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"'
           replacement=',\n\t\"format\": \"prettier --write .\"'
           combineReplacement="${constToFind//\\/\\\\}${replacement//\\/\\\\}"
-          sed -i "s/${constToFind}/${combineReplacement}/g" package.json
+          sed -i "s|${constToFind}|${combineReplacement}|g" package.json
           cat package.json
       - name: Run prettier
         run: |
