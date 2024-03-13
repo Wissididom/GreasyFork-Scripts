@@ -17,7 +17,8 @@ jobs:
         run: |
           npm init --yes
           npm i -D prettier
-          jq '.scripts += {"format": "prettier --write ."}' package.json > tmpfile && mv tmpfile package.json
+          // jq '.scripts += {"format": "prettier --write ."}' package.json > tmpfile && mv tmpfile package.json
+          jq --argjson prettierScript '{"format": "prettier --write ."}' '.scripts += $prettierScript' package.json --in-place
           cat package.json
       - name: Run prettier
         run: |
