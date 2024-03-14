@@ -9,8 +9,8 @@
 // @grant          none
 // @namespace      https://greasyfork.org/users/94906
 // @license        MIT
-// @downloadURL https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.user.js
-// @updateURL https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.meta.js
+// @downloadURL    https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.user.js
+// @updateURL      https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.meta.js
 // ==/UserScript==
 
 // moment is for formatting and comparing dates and times
@@ -161,14 +161,13 @@
     }
     return result;
   }
-  function updateOngoing(durationInMilliseconds) {
+  function updateOngoing(startTime) {
     if (!isUndefinedOrNull(interval)) {
       clearInterval(interval);
       interval = null;
     }
-    let duration = durationInMilliseconds;
     interval = setInterval(function () {
-      duration += 500;
+      let durationInMilliseconds = moment.duration(moment().diff(startTime)).asMilliseconds();
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
           duration,
@@ -486,7 +485,7 @@
           REFRESH_TIMESTAMP +
           "</span>";
     }
-    if (ongoing) updateOngoing(durationInMilliseconds);
+    if (ongoing) updateOngoing(mom);
     let dislikeButtonText = document.getElementsByTagName(
       "yt-formatted-string",
     );
