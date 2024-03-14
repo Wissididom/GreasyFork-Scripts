@@ -167,7 +167,9 @@
       interval = null;
     }
     interval = setInterval(function () {
-      let durationInMilliseconds = moment.duration(moment().diff(startTime)).asMilliseconds();
+      let durationInMilliseconds = moment
+        .duration(moment().diff(startTime))
+        .asMilliseconds();
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
           durationInMilliseconds,
