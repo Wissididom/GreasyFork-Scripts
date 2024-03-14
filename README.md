@@ -1,4 +1,8 @@
+# Youtube exact upload
+
 Adds the time to the upload timestamp below the video.
+
+## Infos
 
 Die time update can take up to 5 seconds (when the website is loaded, a request is made to the YouTube Data API v3 and its value is then set).
 
@@ -28,5 +32,6 @@ In the counter of active livestream or premieres, days are appended in front, if
 
 The API key must be created at https://console.developers.google.com/ and entered into the YT_API_KEY constant in the script (YouTube Data API v3).
 
-Known Bugs
+### Known Bugs
+
 If a livestream or a premiere changes from scheduled to active or from active to finished, the script does not get it (If someone knows how I get the change or in which yt-event you could listen there, I could include it).
