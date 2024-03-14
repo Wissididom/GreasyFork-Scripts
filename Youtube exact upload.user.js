@@ -13,7 +13,6 @@
 // @updateURL https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.meta.js
 // ==/UserScript==
 
-// HackTimer is for making setInterval work in background tabs
 // moment is for formatting and comparing dates and times
 
 (function () {
