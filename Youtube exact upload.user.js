@@ -3,18 +3,16 @@
 // @name:de        YouTube exakter Hochladezeitpunkt
 // @description    Adds exact upload time to youtube videos
 // @description:de Fügt YouTube-Videos den exakten Hochladezeitpunkt mit Uhrzeit hinzu
-// @require        https://cdn.jsdelivr.net/npm/hacktimer@1.1.3/HackTimer.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js
 // @version        0.17
 // @match          https://www.youtube.com/*
 // @grant          none
 // @namespace      https://greasyfork.org/users/94906
 // @license        MIT
-// @downloadURL https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.user.js
-// @updateURL https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.meta.js
+// @downloadURL    https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.user.js
+// @updateURL      https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.meta.js
 // ==/UserScript==
 
-// HackTimer is for making setInterval work in background tabs
 // moment is for formatting and comparing dates and times
 
 (function () {
@@ -163,17 +161,18 @@
     }
     return result;
   }
-  function updateOngoing(durationInMilliseconds) {
+  function updateOngoing(startTime) {
     if (!isUndefinedOrNull(interval)) {
       clearInterval(interval);
       interval = null;
     }
-    let duration = durationInMilliseconds;
     interval = setInterval(function () {
-      duration += 500;
+      let durationInMilliseconds = moment
+        .duration(moment().diff(startTime))
+        .asMilliseconds();
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
-          duration,
+          durationInMilliseconds,
           ":",
           true,
           true,
@@ -488,7 +487,7 @@
           REFRESH_TIMESTAMP +
           "</span>";
     }
-    if (ongoing) updateOngoing(durationInMilliseconds);
+    if (ongoing) updateOngoing(mom);
     let dislikeButtonText = document.getElementsByTagName(
       "yt-formatted-string",
     );
