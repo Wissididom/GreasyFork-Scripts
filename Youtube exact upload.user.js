@@ -170,7 +170,7 @@
       let durationInMilliseconds = moment.duration(moment().diff(startTime)).asMilliseconds();
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
-          duration,
+          durationInMilliseconds,
           ":",
           true,
           true,
