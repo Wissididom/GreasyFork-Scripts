@@ -488,22 +488,6 @@
           "</span>";
     }
     if (ongoing) updateOngoing(mom);
-    let dislikeButtonText = document.getElementsByTagName(
-      "yt-formatted-string",
-    );
-    for (let i = 0; i < dislikeButtonText.length; i++) {
-      if (
-        dislikeButtonText[i].innerHTML == "Mag ich nicht" ||
-        dislikeButtonText[i].innerHTML.toLowerCase() == "dislike"
-      ) {
-        if (dislikeButtonText[i].hasOwnProperty("remove"))
-          dislikeButtonText[i].remove();
-        else
-          dislikeButtonText[i].parentNode &&
-            dislikeButtonText[i].parentNode.removeChild(dislikeButtonText[i]); // Polyfill
-        break;
-      }
-    }
     let primaryInner = document.getElementById("primary-inner");
     let dateTimeValueElem = document.getElementById("exact-date-time");
     if (!dateTimeValueElem) {
