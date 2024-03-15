@@ -168,7 +168,10 @@
       interval = null;
     }
     interval = setInterval(function () {
-      let durationInMilliseconds = Interval.fromDateTimes(DateTime.now(), startTime).length('milliseconds');
+      let durationInMilliseconds = Interval.fromDateTimes(
+        DateTime.now(),
+        startTime,
+      ).length("milliseconds");
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
           durationInMilliseconds,
@@ -206,7 +209,9 @@
         isUndefinedOrNull(data.items[0].liveStreamingDetails.actualStartTime)
       ) {
         // planned
-        dt = DateTime.fromISO(data.items[0].liveStreamingDetails.scheduledStartTime);
+        dt = DateTime.fromISO(
+          data.items[0].liveStreamingDetails.scheduledStartTime,
+        );
         if (dt.hasSame(DateTime.now(), "day")) {
           // today
           if (livestream)
@@ -236,16 +241,23 @@
         }
       } else {
         // ongoing / ended
-        dt = DateTime.fromISO(data.items[0].liveStreamingDetails.actualStartTime);
+        dt = DateTime.fromISO(
+          data.items[0].liveStreamingDetails.actualStartTime,
+        );
         var endTime = null;
         if (
           !isUndefinedOrNull(data.items[0].liveStreamingDetails.actualEndTime)
         )
-          endTime = DateTime.fromISO(data.items[0].liveStreamingDetails.actualEndTime);
+          endTime = DateTime.fromISO(
+            data.items[0].liveStreamingDetails.actualEndTime,
+          );
         if (endTime == null) {
           // ongoing
           ongoing = true;
-          durationInMilliseconds = Interval.fromDateTimes(DateTime.now(), dt).length('milliseconds');
+          durationInMilliseconds = Interval.fromDateTimes(
+            DateTime.now(),
+            dt,
+          ).length("milliseconds");
           if (dt.hasSame(DateTime.now(), "day")) {
             // today
             if (livestream)
