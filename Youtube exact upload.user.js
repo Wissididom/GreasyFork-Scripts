@@ -168,8 +168,8 @@
     }
     interval = setInterval(function () {
       let durationInMilliseconds = luxon.Interval.fromDateTimes(
-        luxon.DateTime.now(),
         startTime,
+        luxon.DateTime.now(),
       ).length("milliseconds");
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
@@ -254,8 +254,8 @@
           // ongoing
           ongoing = true;
           durationInMilliseconds = luxon.Interval.fromDateTimes(
-            luxon.DateTime.now(),
             dt,
+            luxon.DateTime.now(),
           ).length("milliseconds");
           if (dt.hasSame(luxon.DateTime.now(), "day")) {
             // today
