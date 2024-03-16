@@ -3,7 +3,6 @@
 // @name:de        YouTube exakter Hochladezeitpunkt
 // @description    Adds exact upload time to youtube videos
 // @description:de Fügt YouTube-Videos den exakten Hochladezeitpunkt mit Uhrzeit hinzu
-// @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js
 // @version        0.17
 // @match          https://www.youtube.com/*
