@@ -106,9 +106,6 @@
       return "";
     }
   }
-  function isUndefinedOrNull(obj) {
-    return obj == undefined || obj == null;
-  }
   function sleep(milliseconds) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   }
@@ -162,7 +159,7 @@
     return result;
   }
   function updateOngoing(startTime) {
-    if (!isUndefinedOrNull(interval)) {
+    if (interval) {
       clearInterval(interval);
       interval = null;
     }
@@ -187,7 +184,7 @@
   }
   async function updateLiveContent(premiere, livestream, data, dt) {
     var element = null;
-    while (isUndefinedOrNull(element)) {
+    while (!element) {
       element = document.getElementById("primary-inner");
       await sleep(200);
     }
@@ -205,7 +202,7 @@
         );
     } else {
       if (
-        isUndefinedOrNull(data.items[0].liveStreamingDetails.actualStartTime)
+        !data.items[0].liveStreamingDetails.actualStartTime
       ) {
         // planned
         dt = luxon.DateTime.fromISO(
@@ -245,7 +242,7 @@
         );
         var endTime = null;
         if (
-          !isUndefinedOrNull(data.items[0].liveStreamingDetails.actualEndTime)
+          data.items[0].liveStreamingDetails.actualEndTime
         )
           endTime = luxon.DateTime.fromISO(
             data.items[0].liveStreamingDetails.actualEndTime,
@@ -479,7 +476,7 @@
     }
     var contentRating = data.items[0].contentDetails.contentRating;
     if (
-      !isUndefinedOrNull(contentRating.ytRating) &&
+      contentRating.ytRating &&
       contentRating.ytRating == "ytAgeRestricted"
     )
       innerHTML += AGE_RESTRICTED;
@@ -576,11 +573,11 @@
                       return response.text();
                     })
                     .then(function (video_info) {
-                      if (!isUndefinedOrNull(interval)) {
+                      if (interval) {
                         clearInterval(interval);
                         interval = null;
                       }
-                      if (!isUndefinedOrNull(changeCheckTimer)) {
+                      if (changeCheckTimer) {
                         clearInterval(changeCheckTimer);
                         changeCheckTimer = null;
                       }
@@ -593,15 +590,13 @@
                     player_response = JSON.parse(player_response);// data.items[0].status.privacyStatus = "public" -> Öffentliches Video*/
                         let player_response = JSON.parse(video_info);
                         var premiere =
-                          !isUndefinedOrNull(player_response) &&
+                          player_response &&
                           !player_response.videoDetails.isLiveContent;
                         premiere =
                           premiere &&
-                          !isUndefinedOrNull(
-                            data.items[0].liveStreamingDetails,
-                          );
+                          data.items[0].liveStreamingDetails;
                         var livestream =
-                          !isUndefinedOrNull(player_response) &&
+                          player_response &&
                           player_response.videoDetails.isLiveContent;
                         var innerHTML =
                           '<span id="dot" class="style-scope ytd-video-primary-info-renderer">•</span>';
