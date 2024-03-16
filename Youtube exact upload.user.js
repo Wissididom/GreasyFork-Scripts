@@ -497,6 +497,7 @@
     dateTimeValueElem.style.position = "absolute";
     dateTimeValueElem.style.zIndex = "999";
     dateTimeValueElem.innerHTML = innerHTML;
+    dateTimeValueElem.title = dateTimeValueElem.innerText;
     return ongoing;
   }
   function getExactUploadDate(forceRefresh = false) {
