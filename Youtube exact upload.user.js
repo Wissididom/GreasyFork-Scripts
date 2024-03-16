@@ -41,7 +41,7 @@
     "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,contentDetails,localizations,player,statistics,status&key=" +
     YT_API_KEY;
   var lang = document.getElementsByTagName("html")[0].getAttribute("lang");
-  Settings.defaultLocale = lang;
+  luxon.Settings.defaultLocale = lang;
   if (lang.startsWith("de")) {
     DATE_PATTERN = "DD.MM.YYYY"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     TIME_PATTERN = "HH:mm:ss 'Uhr'"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
@@ -168,7 +168,7 @@
       interval = null;
     }
     interval = setInterval(function () {
-      let durationInMilliseconds = Interval.fromDateTimes(
+      let durationInMilliseconds = luxon.Interval.fromDateTimes(
         DateTime.now(),
         startTime,
       ).length("milliseconds");
@@ -197,7 +197,7 @@
     var innerHTML = "";
     if (!premiere && !livestream) {
       // normal video
-      if (dt.hasSame(DateTime.now(), "day"))
+      if (dt.hasSame(luxon.DateTime.now(), "day"))
         // today
         innerHTML += TODAY_AT + dt.toFormat(TIME_PATTERN);
       else
@@ -209,10 +209,10 @@
         isUndefinedOrNull(data.items[0].liveStreamingDetails.actualStartTime)
       ) {
         // planned
-        dt = DateTime.fromISO(
+        dt = luxon.DateTime.fromISO(
           data.items[0].liveStreamingDetails.scheduledStartTime,
         );
-        if (dt.hasSame(DateTime.now(), "day")) {
+        if (dt.hasSame(luxon.DateTime.now(), "day")) {
           // today
           if (livestream)
             innerHTML += SCHEDULED_LIVESTREAM_START + dt.toFormat(TIME_PATTERN);
@@ -241,24 +241,24 @@
         }
       } else {
         // ongoing / ended
-        dt = DateTime.fromISO(
+        dt = luxon.DateTime.fromISO(
           data.items[0].liveStreamingDetails.actualStartTime,
         );
         var endTime = null;
         if (
           !isUndefinedOrNull(data.items[0].liveStreamingDetails.actualEndTime)
         )
-          endTime = DateTime.fromISO(
+          endTime = luxon.DateTime.fromISO(
             data.items[0].liveStreamingDetails.actualEndTime,
           );
         if (endTime == null) {
           // ongoing
           ongoing = true;
-          durationInMilliseconds = Interval.fromDateTimes(
+          durationInMilliseconds = luxon.Interval.fromDateTimes(
             DateTime.now(),
             dt,
           ).length("milliseconds");
-          if (dt.hasSame(DateTime.now(), "day")) {
+          if (dt.hasSame(luxon.DateTime.now(), "day")) {
             // today
             if (livestream)
               innerHTML +=
@@ -376,7 +376,7 @@
           // ended
           if (dt.hasSame(endTime, "day")) {
             // start date and end date are the same
-            if (dt.hasSame(DateTime.now(), "day")) {
+            if (dt.hasSame(luxon.DateTime.now(), "day")) {
               // today
               if (livestream)
                 innerHTML +=
@@ -417,7 +417,7 @@
                   endTime.toFormat(TIME_PATTERN);
             }
           } else {
-            if (dt.hasSame(DateTime.now(), "day")) {
+            if (dt.hasSame(luxon.DateTime.now(), "day")) {
               // today
               if (livestream)
                 innerHTML +=
@@ -534,7 +534,7 @@
             .then(function (data) {
               if (data.pageInfo.totalResults > 0) {
                 const addTime = async () => {
-                  var dt = DateTime.fromISO(data.items[0].snippet.publishedAt);
+                  var dt = luxon.DateTime.fromISO(data.items[0].snippet.publishedAt);
                   console.log(dt);
                   let payload = {
                     context: {
