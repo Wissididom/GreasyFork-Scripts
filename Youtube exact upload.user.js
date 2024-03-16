@@ -43,7 +43,7 @@
   var lang = document.getElementsByTagName("html")[0].getAttribute("lang");
   luxon.Settings.defaultLocale = lang;
   if (lang.startsWith("de")) {
-    DATE_PATTERN = "DD.MM.YYYY"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd.MM.yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     TIME_PATTERN = "HH:mm:ss 'Uhr'"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     DATETIME_COMBINE_PATTERN = " 'um' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Livestream geplant für: ";
@@ -56,7 +56,7 @@
     SINCE = "Seit";
     TODAY_AT = "Heute um ";
   } else if (lang.startsWith("fr")) {
-    DATE_PATTERN = "DD MMMM YYYY"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd MMMM yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     DATETIME_COMBINE_PATTERN = " 'de' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Direct planifié pour le ";
@@ -69,7 +69,7 @@
     SINCE = "Depuis";
     TODAY_AT = "Aujourd'hui à ";
   } else if (lang.startsWith("it")) {
-    DATE_PATTERN = "DD MMMM YYYY"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd MMMM yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     DATETIME_COMBINE_PATTERN = " 'alle' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Diretta pianificata per il: ";
@@ -82,7 +82,7 @@
     SINCE = "Dalle";
     TODAY_AT = "Oggi alle ";
   } else {
-    DATE_PATTERN = "DD.MM.YYYY"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd.MM.yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     DATETIME_COMBINE_PATTERN = " 'at' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Livestream scheduled for: ";
