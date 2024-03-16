@@ -3,7 +3,7 @@
 // @name:de        YouTube exakter Hochladezeitpunkt
 // @description    Adds exact upload time to youtube videos
 // @description:de Fügt YouTube-Videos den exakten Hochladezeitpunkt mit Uhrzeit hinzu
-// @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js
+// @require        https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js
 // @version        0.17
 // @match          https://www.youtube.com/*
 // @grant          none
@@ -13,7 +13,7 @@
 // @updateURL      https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.meta.js
 // ==/UserScript==
 
-// moment is for formatting and comparing dates and times
+// luxon is for formatting and comparing dates and times
 
 (function () {
   "use strict";
@@ -40,11 +40,11 @@
     "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,contentDetails,localizations,player,statistics,status&key=" +
     YT_API_KEY;
   var lang = document.getElementsByTagName("html")[0].getAttribute("lang");
-  moment.locale(lang);
+  luxon.Settings.defaultLocale = lang;
   if (lang.startsWith("de")) {
-    DATE_PATTERN = "DD.MM.YYYY"; // https://momentjs.com/docs/#/parsing/string-format/
-    TIME_PATTERN = "HH:mm:ss [Uhr]"; // https://momentjs.com/docs/#/parsing/string-format/
-    DATETIME_COMBINE_PATTERN = " [um] "; // https://momentjs.com/docs/#/parsing/string-format/
+    DATE_PATTERN = "dd.MM.yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    TIME_PATTERN = "HH:mm:ss 'Uhr'"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATETIME_COMBINE_PATTERN = " 'um' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Livestream geplant für: ";
     SCHEDULED_PREMIERE_START = "Premiere geplant für: ";
     ONGOING_LIVESTREAM_START = "Aktiver Livestream seit ";
@@ -55,9 +55,9 @@
     SINCE = "Seit";
     TODAY_AT = "Heute um ";
   } else if (lang.startsWith("fr")) {
-    DATE_PATTERN = "DD MMMM YYYY"; // https://momentjs.com/docs/#/parsing/string-format/
-    TIME_PATTERN = "HH:mm:ss"; // https://momentjs.com/docs/#/parsing/string-format/
-    DATETIME_COMBINE_PATTERN = " [de] "; // https://momentjs.com/docs/#/parsing/string-format/
+    DATE_PATTERN = "dd MMMM yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATETIME_COMBINE_PATTERN = " 'de' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Direct planifié pour le ";
     SCHEDULED_PREMIERE_START = "Première planifiée pour le ";
     ONGOING_LIVESTREAM_START = "Direct en cours depuis ";
@@ -68,9 +68,9 @@
     SINCE = "Depuis";
     TODAY_AT = "Aujourd'hui à ";
   } else if (lang.startsWith("it")) {
-    DATE_PATTERN = "DD MMMM YYYY"; // https://momentjs.com/docs/#/parsing/string-format/
-    TIME_PATTERN = "HH:mm:ss"; // https://momentjs.com/docs/#/parsing/string-format/
-    DATETIME_COMBINE_PATTERN = " [alle] "; // https://momentjs.com/docs/#/parsing/string-format/
+    DATE_PATTERN = "dd MMMM yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATETIME_COMBINE_PATTERN = " 'alle' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Diretta pianificata per il: ";
     SCHEDULED_PREMIERE_START = "Premiere pianificata per il: ";
     ONGOING_LIVESTREAM_START = "Diretta attiva dalle ";
@@ -81,9 +81,9 @@
     SINCE = "Dalle";
     TODAY_AT = "Oggi alle ";
   } else {
-    DATE_PATTERN = "DD.MM.YYYY"; // https://momentjs.com/docs/#/parsing/string-format/
-    TIME_PATTERN = "HH:mm:ss"; // https://momentjs.com/docs/#/parsing/string-format/
-    DATETIME_COMBINE_PATTERN = " [at] "; // https://momentjs.com/docs/#/parsing/string-format/
+    DATE_PATTERN = "dd.MM.yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATETIME_COMBINE_PATTERN = " 'at' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     SCHEDULED_LIVESTREAM_START = "Livestream scheduled for: ";
     SCHEDULED_PREMIERE_START = "Premiere scheduled for: ";
     ONGOING_LIVESTREAM_START = "Active Livestream since ";
@@ -167,9 +167,10 @@
       interval = null;
     }
     interval = setInterval(function () {
-      let durationInMilliseconds = moment
-        .duration(moment().diff(startTime))
-        .asMilliseconds();
+      let durationInMilliseconds = luxon.Interval.fromDateTimes(
+        startTime,
+        luxon.DateTime.now(),
+      ).length("milliseconds");
       document.getElementById("ongoing-video-duration").innerHTML =
         formatMilliseconds(
           durationInMilliseconds,
@@ -184,7 +185,7 @@
         );
     }, 500);
   }
-  async function updateLiveContent(premiere, livestream, data, mom) {
+  async function updateLiveContent(premiere, livestream, data, dt) {
     var element = null;
     while (isUndefinedOrNull(element)) {
       element = document.getElementById("primary-inner");
@@ -195,11 +196,11 @@
     var innerHTML = "";
     if (!premiere && !livestream) {
       // normal video
-      if (mom.isSame(moment(), "day"))
+      if (dt.hasSame(luxon.DateTime.now(), "day"))
         // today
-        innerHTML += TODAY_AT + mom.format(TIME_PATTERN);
+        innerHTML += TODAY_AT + dt.toFormat(TIME_PATTERN);
       else
-        innerHTML += mom.format(
+        innerHTML += dt.toFormat(
           DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
         );
     } else {
@@ -207,54 +208,61 @@
         isUndefinedOrNull(data.items[0].liveStreamingDetails.actualStartTime)
       ) {
         // planned
-        mom = moment(data.items[0].liveStreamingDetails.scheduledStartTime);
-        if (mom.isSame(moment(), "day")) {
+        dt = luxon.DateTime.fromISO(
+          data.items[0].liveStreamingDetails.scheduledStartTime,
+        );
+        if (dt.hasSame(luxon.DateTime.now(), "day")) {
           // today
           if (livestream)
-            innerHTML += SCHEDULED_LIVESTREAM_START + mom.format(TIME_PATTERN);
+            innerHTML += SCHEDULED_LIVESTREAM_START + dt.toFormat(TIME_PATTERN);
           else if (premiere)
-            innerHTML += SCHEDULED_PREMIERE_START + mom.format(TIME_PATTERN);
-          else innerHTML += TODAY_AT + mom.format(TIME_PATTERN);
+            innerHTML += SCHEDULED_PREMIERE_START + dt.toFormat(TIME_PATTERN);
+          else innerHTML += TODAY_AT + dt.toFormat(TIME_PATTERN);
         } else {
           if (livestream)
             innerHTML +=
               SCHEDULED_LIVESTREAM_START +
-              mom.format(
+              dt.toFormat(
                 DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
               );
           else if (premiere)
             innerHTML +=
               SCHEDULED_PREMIERE_START +
-              mom.format(
+              dt.toFormat(
                 DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
               );
           else
             innerHTML +=
               TODAY_AT +
-              mom.format(
+              dt.toFormat(
                 DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
               );
         }
       } else {
         // ongoing / ended
-        mom = moment(data.items[0].liveStreamingDetails.actualStartTime);
+        dt = luxon.DateTime.fromISO(
+          data.items[0].liveStreamingDetails.actualStartTime,
+        );
         var endTime = null;
         if (
           !isUndefinedOrNull(data.items[0].liveStreamingDetails.actualEndTime)
         )
-          endTime = moment(data.items[0].liveStreamingDetails.actualEndTime);
+          endTime = luxon.DateTime.fromISO(
+            data.items[0].liveStreamingDetails.actualEndTime,
+          );
         if (endTime == null) {
           // ongoing
           ongoing = true;
-          durationInMilliseconds = moment
-            .duration(moment().diff(mom))
-            .asMilliseconds();
-          if (mom.isSame(moment(), "day")) {
+          durationInMilliseconds = luxon.Interval.fromDateTimes(
+            dt,
+            luxon.DateTime.now(),
+          ).length("milliseconds");
+          if (dt.hasSame(luxon.DateTime.now(), "day")) {
             // today
             if (livestream)
               innerHTML +=
                 ONGOING_LIVESTREAM_START +
-                mom.format(TIME_PATTERN) +
+                dt.toFormat(TIME_PATTERN) +
                 ' (<span id="ongoing-video-duration">' +
                 formatMilliseconds(
                   durationInMilliseconds,
@@ -271,7 +279,7 @@
             else if (premiere)
               innerHTML +=
                 ONGOING_PREMIERE_START +
-                mom.format(TIME_PATTERN) +
+                dt.toFormat(TIME_PATTERN) +
                 ' (<span id="ongoing-video-duration">' +
                 formatMilliseconds(
                   durationInMilliseconds,
@@ -289,7 +297,7 @@
               innerHTML +=
                 SINCE +
                 " " +
-                mom.format(TIME_PATTERN) +
+                dt.toFormat(TIME_PATTERN) +
                 ' (<span id="ongoing-video-duration">' +
                 formatMilliseconds(
                   durationInMilliseconds,
@@ -307,7 +315,7 @@
             if (livestream)
               innerHTML +=
                 ONGOING_LIVESTREAM_START +
-                mom.format(
+                dt.toFormat(
                   DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                 ) +
                 ' (<span id="ongoing-video-duration">' +
@@ -326,7 +334,7 @@
             else if (premiere)
               innerHTML +=
                 ONGOING_PREMIERE_START +
-                mom.format(
+                dt.toFormat(
                   DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                 ) +
                 ' (<span id="ongoing-video-duration">' +
@@ -346,7 +354,7 @@
               innerHTML +=
                 SINCE +
                 " " +
-                mom.format(
+                dt.toFormat(
                   DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                 ) +
                 ' (<span id="ongoing-video-duration">' +
@@ -365,103 +373,103 @@
           }
         } else {
           // ended
-          if (mom.isSame(endTime, "day")) {
+          if (dt.hasSame(endTime, "day")) {
             // start date and end date are the same
-            if (mom.isSame(moment(), "day")) {
+            if (dt.hasSame(luxon.DateTime.now(), "day")) {
               // today
               if (livestream)
                 innerHTML +=
                   ENDED_LIVESTREAM_START +
-                  mom.format(TIME_PATTERN) +
+                  dt.toFormat(TIME_PATTERN) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(TIME_PATTERN);
+                  endTime.toFormat(TIME_PATTERN);
               else if (premiere)
                 innerHTML +=
                   ENDED_PREMIERE_START +
-                  mom.format(TIME_PATTERN) +
+                  dt.toFormat(TIME_PATTERN) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(TIME_PATTERN);
-              else innerHTML += TODAY_AT + mom.format(TIME_PATTERN);
+                  endTime.toFormat(TIME_PATTERN);
+              else innerHTML += TODAY_AT + dt.toFormat(TIME_PATTERN);
             } else {
               if (livestream)
                 innerHTML +=
                   ENDED_LIVESTREAM_START +
-                  mom.format(
+                  dt.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   ) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(TIME_PATTERN);
+                  endTime.toFormat(TIME_PATTERN);
               else if (premiere)
                 innerHTML +=
                   ENDED_PREMIERE_START +
-                  mom.format(
+                  dt.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   ) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(TIME_PATTERN);
+                  endTime.toFormat(TIME_PATTERN);
               else
                 innerHTML +=
-                  mom.format(
+                  dt.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   ) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(TIME_PATTERN);
+                  endTime.toFormat(TIME_PATTERN);
             }
           } else {
-            if (mom.isSame(moment(), "day")) {
+            if (dt.hasSame(luxon.DateTime.now(), "day")) {
               // today
               if (livestream)
                 innerHTML +=
                   ENDED_LIVESTREAM_START +
-                  mom.format(TIME_PATTERN) +
+                  dt.toFormat(TIME_PATTERN) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(
+                  endTime.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   );
               else if (premiere)
                 innerHTML +=
                   ENDED_PREMIERE_START +
-                  mom.format(TIME_PATTERN) +
+                  dt.toFormat(TIME_PATTERN) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(
+                  endTime.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   );
               else
                 innerHTML +=
                   TODAY_AT +
-                  mom.format(TIME_PATTERN) +
+                  dt.toFormat(TIME_PATTERN) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(
+                  endTime.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   );
             } else {
               if (livestream)
                 innerHTML +=
                   ENDED_LIVESTREAM_START +
-                  mom.format(
+                  dt.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   ) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(
+                  endTime.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   );
               else if (premiere)
                 innerHTML +=
                   ENDED_PREMIERE_START +
-                  mom.format(
+                  dt.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   ) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(
+                  endTime.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   );
               else
                 innerHTML +=
-                  mom.format(
+                  dt.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   ) +
                   DATETIME_UNTIL_PATTERN +
-                  endTime.format(
+                  endTime.toFormat(
                     DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
                   );
             }
@@ -487,7 +495,7 @@
           REFRESH_TIMESTAMP +
           "</span>";
     }
-    if (ongoing) updateOngoing(mom);
+    if (ongoing) updateOngoing(dt);
     let primaryInner = document.getElementById("primary-inner");
     let dateTimeValueElem = document.getElementById("exact-date-time");
     if (!dateTimeValueElem) {
@@ -525,8 +533,10 @@
             .then(function (data) {
               if (data.pageInfo.totalResults > 0) {
                 const addTime = async () => {
-                  var mom = moment(data.items[0].snippet.publishedAt);
-                  console.log(mom);
+                  var dt = luxon.DateTime.fromISO(
+                    data.items[0].snippet.publishedAt,
+                  );
+                  console.log(dt);
                   let payload = {
                     context: {
                       client: {
@@ -595,7 +605,7 @@
                           player_response.videoDetails.isLiveContent;
                         var innerHTML =
                           '<span id="dot" class="style-scope ytd-video-primary-info-renderer">•</span>';
-                        updateLiveContent(premiere, livestream, data, mom);
+                        updateLiveContent(premiere, livestream, data, dt);
                       } catch (ex) {
                         console.error(ex);
                       }
