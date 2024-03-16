@@ -201,9 +201,7 @@
           DATE_PATTERN + DATETIME_COMBINE_PATTERN + TIME_PATTERN,
         );
     } else {
-      if (
-        !data.items[0].liveStreamingDetails.actualStartTime
-      ) {
+      if (!data.items[0].liveStreamingDetails.actualStartTime) {
         // planned
         dt = luxon.DateTime.fromISO(
           data.items[0].liveStreamingDetails.scheduledStartTime,
@@ -241,9 +239,7 @@
           data.items[0].liveStreamingDetails.actualStartTime,
         );
         var endTime = null;
-        if (
-          data.items[0].liveStreamingDetails.actualEndTime
-        )
+        if (data.items[0].liveStreamingDetails.actualEndTime)
           endTime = luxon.DateTime.fromISO(
             data.items[0].liveStreamingDetails.actualEndTime,
           );
@@ -475,10 +471,7 @@
       }
     }
     var contentRating = data.items[0].contentDetails.contentRating;
-    if (
-      contentRating.ytRating &&
-      contentRating.ytRating == "ytAgeRestricted"
-    )
+    if (contentRating.ytRating && contentRating.ytRating == "ytAgeRestricted")
       innerHTML += AGE_RESTRICTED;
     if (SHOW_REFRESH) {
       if (SHOW_UNDERLINE_ON_TIMESTAMP)
@@ -593,8 +586,7 @@
                           player_response &&
                           !player_response.videoDetails.isLiveContent;
                         premiere =
-                          premiere &&
-                          data.items[0].liveStreamingDetails;
+                          premiere && data.items[0].liveStreamingDetails;
                         var livestream =
                           player_response &&
                           player_response.videoDetails.isLiveContent;
