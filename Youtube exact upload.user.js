@@ -534,7 +534,9 @@
             .then(function (data) {
               if (data.pageInfo.totalResults > 0) {
                 const addTime = async () => {
-                  var dt = luxon.DateTime.fromISO(data.items[0].snippet.publishedAt);
+                  var dt = luxon.DateTime.fromISO(
+                    data.items[0].snippet.publishedAt,
+                  );
                   console.log(dt);
                   let payload = {
                     context: {
