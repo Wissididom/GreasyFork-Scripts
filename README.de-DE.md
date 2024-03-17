@@ -8,9 +8,9 @@ Die Aktualisierung der Zeit kann bis zu 5 Sekunden dauern (Wenn die Website gela
 
 Die Formate der Konstanten im Quellcode müssen geprüft und möglicherweise angepasst werden (Standardwerte in Anführungsstrichen):
 
-- `DATE_PATTERN`: "DD.MM.YYYY" Beispiel: 27.03.2021
-- `TIME_PATTERN`: "HH:mm:ss [Uhr]" Beispiel: 22:00:00 Uhr
-- `DATETIME_COMBINE_PATTERN`: " [um] "
+- `DATE_PATTERN`: "dd.MM.yyyy" Beispiel: 27.03.2021
+- `TIME_PATTERN`: "HH:mm:ss 'Uhr'" Beispiel: 22:00:00 Uhr
+- `DATETIME_COMBINE_PATTERN`: " 'um' "
 - `SCHEDULED_LIVESTREAM_START`: "Livestream geplant für: "
 - `SCHEDULED_PREMIERE_START`: "Premiere geplant für: "
 - `ONGOING_LIVESTREAM_START`: "Aktiver Livestream seit "
