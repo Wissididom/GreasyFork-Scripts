@@ -8,29 +8,29 @@ Die Aktualisierung der Zeit kann bis zu 5 Sekunden dauern (Wenn die Website gela
 
 Die Formate der Konstanten im Quellcode müssen geprüft und möglicherweise angepasst werden (Standardwerte in Anführungsstrichen):
 
-- DATE_PATTERN: "DD.MM.YYYY" Beispiel: 27.03.2021
-- TIME_PATTERN: "HH:mm:ss [Uhr]" Beispiel: 22:00:00 Uhr
-- DATETIME_COMBINE_PATTERN: " [um] "
-- SCHEDULED_LIVESTREAM_START: "Livestream geplant für: "
-- SCHEDULED_PREMIERE_START: "Premiere geplant für: "
-- ONGOING_LIVESTREAM_START: "Aktiver Livestream seit "
-- ONGOING_PREMIERE_START: "Aktive Premiere seit "
-- ENDED_LIVESTREAM_START: "Livestream von "
-- ENDED_PREMIERE_START: "Premiere von "
-- DATETIME_UNTIL_PATTERN: " bis "
-- SINCE: "Seit"
-- TODAY_AT: "Heute um "
-- AGE_RESTRICTED: " - FSK 18";
-- SHOW_REFRESH: true;
-- REFRESH_TIMESTAMP: "⟳";
-- SHOW_UNDERLINE_ON_TIMESTAMP: false;
-- YT_API_KEY: "YouTube API-Key"
+- `DATE_PATTERN`: "DD.MM.YYYY" Beispiel: 27.03.2021
+- `TIME_PATTERN`: "HH:mm:ss [Uhr]" Beispiel: 22:00:00 Uhr
+- `DATETIME_COMBINE_PATTERN`: " [um] "
+- `SCHEDULED_LIVESTREAM_START`: "Livestream geplant für: "
+- `SCHEDULED_PREMIERE_START`: "Premiere geplant für: "
+- `ONGOING_LIVESTREAM_START`: "Aktiver Livestream seit "
+- `ONGOING_PREMIERE_START`: "Aktive Premiere seit "
+- `ENDED_LIVESTREAM_START`: "Livestream von "
+- `ENDED_PREMIERE_START`: "Premiere von "
+- `DATETIME_UNTIL_PATTERN`: " bis "
+- `SINCE`: "Seit"
+- `TODAY_AT`: "Heute um "
+- `AGE_RESTRICTED`: " - FSK 18";
+- `SHOW_REFRESH`: true;
+- `REFRESH_TIMESTAMP`: "⟳";
+- `SHOW_UNDERLINE_ON_TIMESTAMP`: false;
+- `YT_API_KEY`: "YouTube API-Key"
 
-Bei den ersten 3 Konstanten müssen bei Text, der nicht formatiert werden soll, eckige Klammern herum.
+Bei den ersten 3 Konstanten müssen bei Text, der nicht formatiert werden soll, Hochkommas herum.
 
 Bei dem Counter von aktiven Livestream bzw. Premieren werden Tage vorne angehängt, wenn der Livestream schon über 24 Stunden geht (zwei- oder mehrstellig).
 
-Der API-Key muss unter https://console.developers.google.com/ angelegt werden und in die Konstante YT_API_KEY in dem Skript eingetragen werden (YouTube Data API v3).
+Der API-Key muss unter https://console.developers.google.com/ angelegt werden und in die Konstante `YT_API_KEY` in dem Skript eingetragen werden (YouTube Data API v3).
 
 ### Bekannte Bugs
 
