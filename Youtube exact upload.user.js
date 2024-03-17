@@ -4,7 +4,7 @@
 // @description    Adds exact upload time to youtube videos
 // @description:de Fügt YouTube-Videos den exakten Hochladezeitpunkt mit Uhrzeit hinzu
 // @require        https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js
-// @version        0.17
+// @version        0.18
 // @match          https://www.youtube.com/*
 // @grant          none
 // @namespace      https://greasyfork.org/users/94906
