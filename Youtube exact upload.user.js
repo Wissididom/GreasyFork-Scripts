@@ -168,18 +168,24 @@
         startTime,
         luxon.DateTime.now(),
       ).length("milliseconds");
-      document.getElementById("ongoing-video-duration").innerHTML =
-        formatMilliseconds(
-          durationInMilliseconds,
-          ":",
-          true,
-          true,
-          true,
-          true,
-          false,
-          true,
-          true,
-        );
+      var ongoingVideoDuration = document.getElementById(
+        "ongoing-video-duration",
+      );
+      ongoingVideoDuration.innerHTML = formatMilliseconds(
+        durationInMilliseconds,
+        ":",
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+      );
+      if (ongoingVideoDuration.parentNode) {
+        ongoingVideoDuration.parentNode.title =
+          ongoingVideoDuration.parentNode.innerText;
+      }
     }, 500);
   }
   async function updateLiveContent(premiere, livestream, data, dt) {
