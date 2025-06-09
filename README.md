@@ -4,9 +4,11 @@ Adds the time to the upload timestamp below the video.
 
 ## Infos
 
-The time update can take up to 5 seconds (when the website is loaded, a request is made to the YouTube Data API v3 and its value is then set).
+The time update can take up to 5 seconds (when the website is loaded, a request
+is made to the YouTube Data API v3 and its value is then set).
 
-The formats of the constants in the source code need to be checked and possibly adjusted (default values in quotes):
+The formats of the constants in the source code need to be checked and possibly
+adjusted (default values in quotes):
 
 - `DATE_PATTERN`: "dd.MM.yyyy" Example: 27.03.2021.
 - `TIME_PATTERN`: "HH:mm:ss" Example: 22:00:00
@@ -26,12 +28,17 @@ The formats of the constants in the source code need to be checked and possibly 
 - `SHOW_UNDERLINE_ON_TIMESTAMP`: false;
 - `YT_API_KEY`: "YouTube API-Key"
 
-For the first 3 constants, `'` must be around the text which should not be formatted.
+For the first 3 constants, `'` must be around the text which should not be
+formatted.
 
-In the counter of active livestream or premieres, days are appended in front, if the livestream is longer than 24 hours (two or more digits).
+In the counter of active livestream or premieres, days are appended in front, if
+the livestream is longer than 24 hours (two or more digits).
 
-The API key must be created at https://console.developers.google.com/ and entered into the `YT_API_KEY` constant in the script (YouTube Data API v3).
+The API key must be created at https://console.developers.google.com/ and
+entered into the `YT_API_KEY` constant in the script (YouTube Data API v3).
 
 ### Known Bugs
 
-If a livestream or a premiere changes from scheduled to active or from active to finished, the script does not get it (If someone knows how I get the change or in which yt-event you could listen there, I could include it).
+If a livestream or a premiere changes from scheduled to active or from active to
+finished, the script does not get it (If someone knows how I get the change or
+in which yt-event you could listen there, I could include it).
