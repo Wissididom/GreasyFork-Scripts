@@ -3,8 +3,8 @@
 // @name:de        YouTube exakter Hochladezeitpunkt
 // @description    Adds exact upload time to youtube videos
 // @description:de Fügt YouTube-Videos den exakten Hochladezeitpunkt mit Uhrzeit hinzu
-// @require        https://cdnjs.cloudflare.com/ajax/libs/luxon/3.5.0/luxon.min.js
-// @version        0.19
+// @require        https://cdnjs.cloudflare.com/ajax/libs/luxon/3.7.1/luxon.min.js
+// @version        0.20
 // @match          https://www.youtube.com/*
 // @grant          none
 // @namespace      https://greasyfork.org/users/94906
@@ -37,13 +37,13 @@
   const REFRESH_TIMESTAMP = "&#10227;";
   const SHOW_UNDERLINE_ON_TIMESTAMP = false;
   const BASE_URL =
-    "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,contentDetails,localizations,player,statistics,status&key=" +
-    YT_API_KEY;
+    `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,contentDetails,localizations,player,statistics,status&key=${YT_API_KEY}`;
   luxon.Settings.defaultLocale = document.documentElement.lang;
+  // https://moment.github.io/luxon/#/formatting?id=table-of-tokens (first 3 entries of each if scope)
   if (document.documentElement.lang.startsWith("de")) {
-    DATE_PATTERN = "dd.MM.yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    TIME_PATTERN = "HH:mm:ss 'Uhr'"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    DATETIME_COMBINE_PATTERN = " 'um' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd.MM.yyyy";
+    TIME_PATTERN = "HH:mm:ss 'Uhr'";
+    DATETIME_COMBINE_PATTERN = " 'um' ";
     SCHEDULED_LIVESTREAM_START = "Livestream geplant für: ";
     SCHEDULED_PREMIERE_START = "Premiere geplant für: ";
     ONGOING_LIVESTREAM_START = "Aktiver Livestream seit ";
@@ -54,9 +54,9 @@
     SINCE = "Seit";
     TODAY_AT = "Heute um ";
   } else if (document.documentElement.lang.startsWith("fr")) {
-    DATE_PATTERN = "dd MMMM yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    DATETIME_COMBINE_PATTERN = " 'de' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd MMMM yyyy";
+    TIME_PATTERN = "HH:mm:ss";
+    DATETIME_COMBINE_PATTERN = " 'de' ";
     SCHEDULED_LIVESTREAM_START = "Direct planifié pour le ";
     SCHEDULED_PREMIERE_START = "Première planifiée pour le ";
     ONGOING_LIVESTREAM_START = "Direct en cours depuis ";
@@ -67,9 +67,9 @@
     SINCE = "Depuis";
     TODAY_AT = "Aujourd'hui à ";
   } else if (document.documentElement.lang.startsWith("it")) {
-    DATE_PATTERN = "dd MMMM yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    DATETIME_COMBINE_PATTERN = " 'alle' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd MMMM yyyy";
+    TIME_PATTERN = "HH:mm:ss";
+    DATETIME_COMBINE_PATTERN = " 'alle' ";
     SCHEDULED_LIVESTREAM_START = "Diretta pianificata per il: ";
     SCHEDULED_PREMIERE_START = "Premiere pianificata per il: ";
     ONGOING_LIVESTREAM_START = "Diretta attiva dalle ";
@@ -80,9 +80,9 @@
     SINCE = "Dalle";
     TODAY_AT = "Oggi alle ";
   } else {
-    DATE_PATTERN = "dd.MM.yyyy"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    TIME_PATTERN = "HH:mm:ss"; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-    DATETIME_COMBINE_PATTERN = " 'at' "; // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    DATE_PATTERN = "dd.MM.yyyy";
+    TIME_PATTERN = "HH:mm:ss";
+    DATETIME_COMBINE_PATTERN = " 'at' ";
     SCHEDULED_LIVESTREAM_START = "Livestream scheduled for: ";
     SCHEDULED_PREMIERE_START = "Premiere scheduled for: ";
     ONGOING_LIVESTREAM_START = "Active Livestream since ";
@@ -116,7 +116,7 @@
       "minutes",
       "seconds",
     );
-    return [dur.hours, dur.minutes, dur.seconds].map((unit) =>
+    return [dur.hours, dur.minutes, Math.floor(dur.seconds)].map((unit) =>
       String(unit).padStart(2, "0")
     ).join(":");
   }
@@ -133,12 +133,12 @@
       const ongoingVideoDuration = document.getElementById(
         "ongoing-video-duration",
       );
-      ongoingVideoDuration.innerHTML = formatMilliseconds(
+      const formatted = formatMilliseconds(
         durationInMilliseconds,
       );
+      ongoingVideoDuration.innerHTML = formatted;
       if (ongoingVideoDuration.parentNode) {
-        ongoingVideoDuration.parentNode.title =
-          ongoingVideoDuration.parentNode.innerText;
+        ongoingVideoDuration.parentNode.title = formatted;
       }
     }, 500);
   }
