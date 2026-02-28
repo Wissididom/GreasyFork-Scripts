@@ -34,7 +34,7 @@
     TODAY_AT;
   const AGE_RESTRICTED = " - FSK 18";
   const SHOW_REFRESH = true;
-  const REFRESH_TIMESTAMP = "&#10227;";
+  const REFRESH_TIMESTAMP = "⟳";
   const SHOW_UNDERLINE_ON_TIMESTAMP = false;
   const BASE_URL =
     `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,contentDetails,localizations,player,statistics,status&key=${YT_API_KEY}`;
@@ -138,7 +138,8 @@
       );
       ongoingVideoDuration.innerHTML = formatted;
       if (ongoingVideoDuration.parentNode) {
-        ongoingVideoDuration.parentNode.title = formatted;
+        ongoingVideoDuration.parentNode.title = ongoingVideoDuration.parentNode
+          .innerText.replace(REFRESH_TIMESTAMP, "").trim();
       }
     }, 500);
   }
@@ -396,7 +397,10 @@
     dateTimeValueElem.style.position = "absolute";
     dateTimeValueElem.style.zIndex = "999";
     dateTimeValueElem.innerHTML = innerHTML;
-    dateTimeValueElem.title = dateTimeValueElem.innerText;
+    dateTimeValueElem.title = dateTimeValueElem.innerText.replace(
+      REFRESH_TIMESTAMP,
+      "",
+    ).trim();
     return ongoing;
   }
   function getExactUploadDate(forceRefresh = false) {
