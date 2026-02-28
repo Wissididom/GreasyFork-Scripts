@@ -4,10 +4,11 @@
 // @description    Adds exact upload time to youtube videos
 // @description:de Fügt YouTube-Videos den exakten Hochladezeitpunkt mit Uhrzeit hinzu
 // @require        https://cdnjs.cloudflare.com/ajax/libs/luxon/3.7.2/luxon.min.js
-// @version        1.0
+// @version        1.1
 // @match          https://www.youtube.com/*
 // @grant          GM.getValue
 // @grant          GM.setValue
+// @grant          GM.registerMenuCommand
 // @namespace      https://greasyfork.org/users/94906
 // @license        MIT
 // @downloadURL    https://update.greasyfork.org/scripts/424068/Youtube%20exact%20upload.user.js
@@ -19,7 +20,9 @@
 (async function () {
   "use strict";
   console.log("YT EXACT UPLOAD LOADED");
-  //Pre-Define Variables to prevent warning of redaclaration of variables
+  await GM.registerMenuCommand("Clear API Key", async () => {
+    await GM.setValue("YT_API_KEY", "");
+  });
   var YT_API_KEY = await GM.getValue("YT_API_KEY", "");
   if (!YT_API_KEY) {
     const newKey = prompt("Enter your YouTube API Key:", YT_API_KEY);
@@ -31,6 +34,7 @@
       return;
     }
   }
+  //Pre-Define Variables to prevent warning of redaclaration of variables
   let DATE_PATTERN,
     TIME_PATTERN,
     DATETIME_COMBINE_PATTERN,
