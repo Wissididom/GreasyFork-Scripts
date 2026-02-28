@@ -1,6 +1,6 @@
 # Youtube exact upload
 
-Adds the time to the upload timestamp below the video.
+Adds the time to the upload timestamp above the video.
 
 ## Infos
 
@@ -34,8 +34,8 @@ formatted.
 In the counter of active livestream or premieres, days are appended in front, if
 the livestream is longer than 24 hours (two or more digits).
 
-The API key must be created at https://console.developers.google.com/ and
-entered into the `YT_API_KEY` constant in the script (YouTube Data API v3).
+The API key must be created at https://console.developers.google.com/ (YouTube
+Data API v3) and the script asks for it when it is run on youtube.
 
 ### Known Bugs
 
